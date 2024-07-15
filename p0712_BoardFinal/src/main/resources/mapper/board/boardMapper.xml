@@ -7,10 +7,10 @@
   <select id="selectCount" resultType="int">
 	select count(*) from board
 	<if test="category == 'all' ">
-		where btitle like '%'||#{searchWord}||'%' or bcontent like '%'||#{searchWord}||'%'
+		where btitle like '%'||#{sword}||'%' or bcontent like '%'||#{sword}||'%'
 	</if>
 	<if test="category == 'btitle' or category == 'bcontent' ">
-		where ${category} like '%'||#{searchWord}||'%'
+		where ${category} like '%'||#{sword}||'%'
 	</if>
   </select>
   
