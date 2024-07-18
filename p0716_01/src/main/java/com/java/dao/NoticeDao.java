@@ -22,5 +22,14 @@ public interface NoticeDao {
 	ArrayList<CommentDto> selectAllCommentB(NoticeDto noticeDto);
 	//댓긓 개수
 	int countAllCommentB(NoticeDto noticeDto);
+	
+	//댓글 추가
+	void insertCommentB(CommentDto commentDto);
+	
+	//댓글 수정하기 위해 하나 선택
+	CommentDto selectOneCommentB(CommentDto commentDto);
+	
+	//댓글 삭제
+	void deleteCommentB(CommentDto commentDto);
 
 }

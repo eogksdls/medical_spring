@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.java.dto.CommentDto;
@@ -44,5 +45,25 @@ public class CustomerController {
 		return mv;
 	}
 	
+	@RequestMapping("/commentBwrite") // 하단댓글 추가
+	@ResponseBody // 데이터리턴
+		public CommentDto commentBwrite(CommentDto commentDto){
+		System.out.println("controller bno : "+commentDto.getBno());
+		System.out.println("controller ccontent : "+commentDto.getCcontent());
+
+		// bno, id, cpw, ccontent
+		CommentDto cDto = noticeService.insertCommentB(commentDto);
+
+		return cDto;
+	}
+	@RequestMapping("/commentBDelete") // 하단댓글 삭제
+	@ResponseBody // 데이터리턴
+	public String commentBDelete(CommentDto commentDto){
+		System.out.println("controller cno : "+commentDto.getCno());
+		// cno
+		noticeService.deleteCommentB(commentDto);
+
+		return "1";
+	}
 	
 }

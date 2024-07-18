@@ -47,5 +47,26 @@ public class NoticeServiceImpl implements NoticeService {
 		return map;
 	}
 
+	@Override
+	public CommentDto insertCommentB(CommentDto commentDto) {
+		System.out.println("service cno"+commentDto.getCno());
+		// 하단댓글 저장
+		noticeDao.insertCommentB(commentDto);
+		// cno 생성 후 출력
+		System.out.println("service cno2"+commentDto.getCno());
+		// 하단댓글 1개 가져오기
+		CommentDto cBDto = noticeDao.selectOneCommentB(commentDto);
+		return cBDto;
+	}
+
+	@Override
+	public void deleteCommentB(CommentDto commentDto) {
+		System.out.println("service cno"+commentDto.getCno());
+		// 하단댓글 저장
+		noticeDao.deleteCommentB(commentDto);
+		return;
+		
+	}
+
 
 }

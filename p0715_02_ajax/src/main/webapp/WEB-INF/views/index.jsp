@@ -12,7 +12,7 @@
 	<body>
 	  <h2>메인페이지</h2>
 	  <ul>
-	    <li><a href="json_data">json 불러오기</a></li>
+	    <li><a href="/jsno_data">json 불러오기</a></li>
 	    <li><a href="depart_list">부서리스트</a></li>
 	    <li><a href="emp_depart_list">사원+부서 조인</a></li>
 	    <li><a href="ed_list">사원+부서 조인2</a></li>

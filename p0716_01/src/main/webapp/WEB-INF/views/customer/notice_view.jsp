@@ -238,22 +238,159 @@ $(document).ready(function() {
 					</div>
 					<!-- //이전다음글 -->
 					<script>
-						$(function(){
-							
-							//등록버튼 클릭
-							$(".replyBtn").click(function(){
-								alert("등록버튼 클릭");
-								alert($(".replynum").val());
-								alert($(".replyType").val());
-								
-								
-								
-								
+					$(function(){
+
+						let count = '${list.size()}';
+						console.log("댓글 개수 : "+count);
+
+						let cno,bno,id,cpw,ccontent,cdate; // 전역변수 선언
+						
+						//등록버튼 클릭
+						$(".replyBtn").click(function(){
+							bno = "${nDto.bno}";
+							id = "aaa";
+							cpw = $(".replynum").val();
+							ccontent = $(".replyType").val();
+
+							console.log("bno:"+bno);
+							console.log("id:"+id);
+							console.log("cpw:"+cpw);
+							console.log("ccontent:"+ccontent);
+
+
+							$.ajax({
+								url:"/customer/commentBwrite",
+								type:"post",
+								data:{"bno":bno,"id":id,"cpw":cpw,"ccontent":ccontent},
+								dataType:"json", // 기본이 text
+								success:function(data){
+									alert("댓글이 저장되었습니다.");
+									let htmlData="";
+									htmlData += '<ul id='+data.cno+' >';
+									htmlData += '<li class="name">'+data.id+' <span>['+moment(data.cdata).format("YYYY-MM-DD HH:mm:ss")+']</span></li>';
+									htmlData += '<li class="txt">'+data.ccontent+'</li>';
+									htmlData += '<li class="btn">';
+									htmlData += '<a class="rebtn uBtn">수정</a>&nbsp';
+									htmlData += '<a class="rebtn dBtn">삭제</a>';
+									htmlData += '</li>';
+									htmlData += '</ul>';
+
+									if(count>0) $(".replyBox").prepend(htmlData);
+									else $(".replyBox").html(htmlData);
+									// 총개수 +1 증가
+									$("#comment_number").text(Number($("#comment_number").text())+1)
+									// 글쓰기 초기화
+									$(".replynum").val("");
+									$(".replyType").val("");
+
+
+								},
+								error:function(){
+									alert("실패");
+								}
 							});
-							
-							
-							
-						});
+						}); // replyBtn
+						// 삭제버튼 클릭
+						$(".dBtn").click(function(){
+							console.log("ui cno : "+ $(this).closest('ul').attr('id'));
+							if(!confirm("댓글을 삭제하시겠습니까?")){
+								return false;
+							}
+							let cno= $(this).closest('ul').attr('id');
+
+							$.ajax({
+								url:"/customer/commentBDelete",
+								type:"post",
+								data:{"cno":cno},
+								dataType:"text", // 기본이 text
+								success:function(data){
+									alert("댓글이 삭제되었습니다.");
+									$("#"+cno).remove();
+									// 총개수 -1 감소
+									$("#comment_number").text(Number($("#comment_number").text())-1)
+								},
+								error:function(){
+									alert("실패");
+								}
+							}); // ajax
+
+						}); // dBtn
+
+						// 수정버튼 클릭
+						$(".uBtn").click(function(){
+							alert("수정버튼 클릭");
+							console.log("ui cno : "+ $(this).closest('ul').attr('id'));
+
+							cno = $(this).closest('ul').attr('id');
+							id = 'aaa';
+							cdate = $(this).closest('ul').children('.name').children('span').text();
+							ccontent = $(this).closest('ul').children('.txt').text();
+
+							console.log("cno : "+ cno);
+							console.log("id : "+ id);
+							console.log("cdate : "+ cdate);
+							console.log("ccontent : "+ ccontent);
+
+							let htmlData="";
+							htmlData += '<li class="name">'+id+' <span>'+cdate+'</span></li>';
+							htmlData += '<li class="txt"><textarea class="replyType">'+ccontent+'</textarea></li>';
+							htmlData += '<li class="btn">';
+							htmlData += '<a class="rebtn updateBtn">완료</a> ';
+							htmlData += '<a class="rebtn cancelBtn">취소</a>';
+							htmlData += '</li>';
+
+							$("#"+cno).html(htmlData);
+
+						}); // uBtn
+
+						// 수정에서 취소버튼
+						$(document).on("click",".cancelBtn",function(){
+							alert("취소버튼을 클릭하셨습니다.");
+							// 데이터 확인
+							console.log("ui cno : "+ $(this).closest('ul').attr('id'));
+							console.log("update cno : "+ cno);
+							console.log("update id : "+ id);
+							console.log("update cdate : "+ cdate);
+							console.log("update ccontent : "+ ccontent);
+
+							// 데이터 넣기
+							let htmlData="";
+							htmlData += '<li class="name">'+id+' <span>'+cdate+'</span></li>';
+							htmlData += '<li class="txt">'+ccontent+'</li>';
+							htmlData += '<li class="btn">';
+							htmlData += '<a class="rebtn uBtn">수정</a>&nbsp';
+							htmlData += '<a class="rebtn dBtn">삭제</a>';
+							htmlData += '</li>';
+
+							$("#"+cno).html(htmlData);
+
+						}); // cancelBtn
+
+						// 수정에서 완료버튼
+						$(document).on("click",".updateBtn",function(){
+							alert("수정이 완료되었습니다.")
+							// 데이터 확인
+							console.log("ui cno : "+ $(this).closest('ul').attr('id'));
+							ccontent = $(this).closest('ul').children('.txt').children('.replyType').val();
+
+
+							console.log("update cno : "+ cno);
+							console.log("update id : "+ id);
+							console.log("update ccontent : "+ ccontent);
+
+							// 데이터 넣기
+/* 							let htmlData="";
+							htmlData += '<li class="name">'+id+' <span>'+cdate+'</span></li>';
+							htmlData += '<li class="txt">'+ccontent+'</li>';
+							htmlData += '<li class="btn">';
+							htmlData += '<a class="rebtn uBtn">수정</a>&nbsp';
+							htmlData += '<a class="rebtn dBtn">삭제</a>';
+							htmlData += '</li>';*/
+
+							$("#"+cno).html(htmlData);
+
+						}); // updateBtn
+					}); // jquery
 					</script>
 
 					<!-- 댓글-->
@@ -280,8 +417,8 @@ $(document).ready(function() {
 							<li class="name">${cdto.id } <span>${cdto.cdate }</span></li>
 							<li class="txt">${cdto.ccontent }</li>
 							<li class="btn">
-								<a href="#" class="rebtn">수정</a>
-								<a href="#" class="rebtn">삭제</a>
+								<a class="rebtn uBtn">수정</a>
+								<a class="rebtn dBtn">삭제</a>
 							</li>
 						</ul>
 						</c:forEach>
